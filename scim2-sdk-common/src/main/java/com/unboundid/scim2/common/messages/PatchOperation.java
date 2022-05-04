@@ -48,6 +48,10 @@ import java.util.List;
 
 /**
  * An individual patch operation.
+ *
+ * Extended by collaboration Factory AG:
+ * - added a {@link PatchOperation#getOp} method in addition to {@link PatchOperation#getOpType()} in order to be compliant with the protocol
+ * - added a {@link PatchOperation#getPathString()} method that returns the path as String and replaces the {@link PatchOperation#getPath()} method for returning the path property
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
@@ -460,14 +464,24 @@ public abstract class PatchOperation
   @JsonIgnore
   public abstract PatchOpType getOpType();
 
+  public String getOp() {
+    return getOpType().toString();
+  }
+
   /**
    * Retrieves the path targeted by this operation.
    *
    * @return The path targeted by this operation.
    */
+  @JsonIgnore
   public Path getPath()
   {
     return path;
+  }
+
+  @JsonProperty("path")
+  public String getPathString() {
+    return "/" + getPath().toString().replaceAll("\\.", "/");
   }
 
   /**
